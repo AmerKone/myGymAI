@@ -4,7 +4,7 @@ AI-powered Gym &amp; Fitness Assistant — a chatbot that provides personalized 
 # How to run ? 
 ### Steps : 
 
-Clone the repository
+First clone the repository 
 
 ```bash
 git clone https://github.com/AmerKone/GymAI.git
