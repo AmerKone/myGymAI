@@ -1,7 +1,7 @@
 # GymAI
 AI-powered Gym &amp; Fitness Assistant — a chatbot that provides personalized workout advice, exercise explanations, and nutrition guidance using NLP and LLMs.
 
-# How to run ? 
+# 🔧 Setup Instructions
 ### Steps : 
 
 First clone the repository 
@@ -34,17 +34,6 @@ pip install -r requirements.txt
 
 In the root directory, create a `.env` file and add your **Pinecone** and **OpenAI** credentials:
 
-```ini
-PINECONE_API_KEY = "your_pinecone_api_key_here"
-OPENAI_API_KEY = "your_openai_api_key_here"
-
-🔧 Setup Instructions
-1️⃣ Create a .env File
-
-In the root directory, create a .env file and add your Pinecone and OpenAI credentials:
-
-PINECONE_API_KEY = "your_pinecone_api_key_here"
-OPENAI_API_KEY = "your_openai_api_key_here"
 
 2️⃣ Store Embeddings in Pinecone
 
@@ -61,7 +50,7 @@ python app.py
 
 Then open your browser and go to:
 
-http://localhost:5000
+http://localhost:8080
 
 🧠 Tech Stack
 
