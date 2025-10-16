@@ -41,7 +41,7 @@ Run the following command to generate and store vector embeddings:
 ```bash
 python store_index.py
 ```
-### 3Step 5 : Launch the Flask Application
+### Step 5 : Launch the Flask Application
 
 Start the application by running:
 ```bash
@@ -67,3 +67,5 @@ Pinecone
 AWS (ECR, EC2)
 
 GitHub Actions
+
+# TODO : AWS-CI/CD-Deployment-with-Github-Actions 
