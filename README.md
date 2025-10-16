@@ -28,3 +28,53 @@ conda activate aienv
 pip install -r requirements.txt
 ```
 
+## 🔧 Setup Instructions
+
+### 1️⃣ Create a `.env` File
+
+In the root directory, create a `.env` file and add your **Pinecone** and **OpenAI** credentials:
+
+```ini
+PINECONE_API_KEY = "your_pinecone_api_key_here"
+OPENAI_API_KEY = "your_openai_api_key_here"
+
+🔧 Setup Instructions
+1️⃣ Create a .env File
+
+In the root directory, create a .env file and add your Pinecone and OpenAI credentials:
+
+PINECONE_API_KEY = "your_pinecone_api_key_here"
+OPENAI_API_KEY = "your_openai_api_key_here"
+
+2️⃣ Store Embeddings in Pinecone
+
+Run the following command to generate and store vector embeddings:
+
+python store_index.py
+
+3️⃣ Launch the Flask Application
+
+Start the application by running:
+
+python app.py
+
+
+Then open your browser and go to:
+
+http://localhost:5000
+
+🧠 Tech Stack
+
+Python
+
+LangChain
+
+Flask
+
+OpenAI GPT
+
+Pinecone
+
+AWS (ECR, EC2)
+
+GitHub Actions
