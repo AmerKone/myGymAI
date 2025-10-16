@@ -10,7 +10,7 @@ First clone the repository
 git clone https://github.com/AmerKone/GymAI.git
 ```
 
-### Step 1 : creat a venv environment
+### Step 1 : create a venv environment
 
 ```bash
 conda create -n aienv python=3.11.3
@@ -30,18 +30,18 @@ pip install -r requirements.txt
 
 
 
-### 1️⃣ Create a `.env` File
+### Step 3 : Create a `.env` File
 
 In the root directory, create a `.env` file and add your **Pinecone** and **OpenAI** credentials:
 
 
-### 2️⃣ Store Embeddings in Pinecone
+### Step 4 : Store Embeddings in Pinecone
 
 Run the following command to generate and store vector embeddings:
 ```bash
 python store_index.py
 ```
-### 3️⃣ Launch the Flask Application
+### 3Step 5 : Launch the Flask Application
 
 Start the application by running:
 ```bash
