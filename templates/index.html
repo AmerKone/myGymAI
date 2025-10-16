@@ -54,6 +54,76 @@
 		
 		<script>
 			$(document).ready(function() {
+
+				// Helper: create a bot bubble with typing indicator and return the bubble element
+				function createBotBubble(str_time) {
+					const wrapper = document.createElement('div');
+					wrapper.className = 'd-flex justify-content-start mb-4';
+
+					const imgDiv = document.createElement('div');
+					imgDiv.className = 'img_cont_msg';
+					const img = document.createElement('img');
+					img.src = '/static/logo.png';
+					img.className = 'rounded-circle user_img_msg';
+					imgDiv.appendChild(img);
+
+					const bubbleDiv = document.createElement('div');
+					bubbleDiv.className = 'msg_cotainer';
+					bubbleDiv.innerHTML = '<span class="typing-indicator">• • •</span>';
+
+					wrapper.appendChild(imgDiv);
+					wrapper.appendChild(bubbleDiv);
+
+					// append to messages container
+					document.getElementById('messageFormeight').appendChild(wrapper);
+					// return the bubble element where text will be typed
+					return { wrapper: wrapper, bubble: bubbleDiv };
+				}
+
+				// Helper: type text into a bubble char-by-char, then call onFinish
+				function typeOut(bubbleElem, text, speed = 12, onFinish) {
+					if (!bubbleElem) return;
+					// show plain text while typing to avoid partial HTML
+					bubbleElem.textContent = '';
+					let i = 0;
+					const timer = setInterval(() => {
+						i++;
+						const partial = text.slice(0, i);
+						// If marked + DOMPurify are available, render progressively as Markdown and sanitize.
+						if (typeof marked !== 'undefined' && typeof DOMPurify !== 'undefined') {
+							try {
+								const renderedPartial = marked.parse(String(partial));
+								bubbleElem.innerHTML = DOMPurify.sanitize(renderedPartial);
+							} catch (e) {
+								// fallback to escaped plain text if marked fails
+								bubbleElem.textContent = partial;
+							}
+						} else {
+							// fallback: show plain text while typing
+							bubbleElem.textContent = partial;
+						}
+
+						// keep scroll at bottom
+						document.getElementById('messageFormeight').scrollTop = document.getElementById('messageFormeight').scrollHeight;
+						if (i >= text.length) {
+							clearInterval(timer);
+							// append message time after full render
+							const timeHtml = '<span class="msg_time">' + new Date().toLocaleTimeString().slice(0,5) + '</span>';
+							if (typeof marked !== 'undefined' && typeof DOMPurify !== 'undefined') {
+								try {
+									const rendered = marked.parse(String(text));
+									bubbleElem.innerHTML = DOMPurify.sanitize(rendered) + timeHtml;
+								} catch (e) {
+									bubbleElem.innerHTML = DOMPurify.sanitize(escapeHtml(String(text))) + timeHtml;
+								}
+							} else {
+								bubbleElem.innerHTML = escapeHtml(String(text)) + timeHtml;
+							}
+							if (onFinish) onFinish();
+						}
+					}, speed);
+				}
+
 				$("#messageArea").on("submit", function(event) {
 					const date = new Date();
 					const hour = date.getHours();
@@ -82,16 +152,16 @@
 						type: "POST",
 						url: "/get",
 					}).done(function(data) {
-						// data may be plain text or HTML from the server. Treat it as Markdown/text and render safely.
-						try {
-							var rendered = marked.parse(String(data));
-							var safe = DOMPurify.sanitize(rendered);
-						} catch (e) {
-							var safe = DOMPurify.sanitize(escapeHtml(String(data)));
-						}
+						// data may be plain text or HTML from the server. We'll type the raw text
+						// and then render Markdown safely once typing completes.
+						var replyText = String(data);
 
-						var botHtml = '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="/static/logo.png" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">' + safe + '<span class="msg_time">' + str_time + '</span></div></div>';
-						$("#messageFormeight").append(botHtml);
+						// create bot bubble with typing indicator
+						var bot = createBotBubble(str_time);
+						// type out the reply into the bubble, then render sanitized Markdown
+						typeOut(bot.bubble, replyText, 12, function() {
+							// finished - nothing else required since typeOut replaces the content with sanitized HTML
+						});
 					});
 					event.preventDefault();
 				});

@@ -279,4 +279,22 @@ body, html {
   overflow-x: auto;
 }
 
+.typing-indicator {
+  display: inline-block;
+  color: rgba(255,255,255,0.6);
+  font-weight: 700;
+  letter-spacing: 6px;
+  transform: translateY(-2px);
+}
+
+@keyframes blink-dots {
+  0% { opacity: 0.2; }
+  20% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+.typing-indicator::before {
+  content: '• • •';
+  animation: blink-dots 1s infinite steps(4, end);
+}
+
 

@@ -23,6 +23,58 @@ function addMessage(content, sender) {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+// Create a bot message bubble with a typing indicator and return the bubble element
+function createBotBubble() {
+  const message = document.createElement('div');
+  message.classList.add('message', 'bot-message');
+
+  const avatar = document.createElement('img');
+  avatar.classList.add('avatar');
+  avatar.src = '/static/bot_gym.svg';
+  avatar.alt = 'Bot';
+
+  const bubble = document.createElement('div');
+  bubble.classList.add('bubble');
+  bubble.innerHTML = '<span class="typing-indicator">• • •</span>';
+
+  message.appendChild(avatar);
+  message.appendChild(bubble);
+
+  chatBox.appendChild(message);
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  return bubble;
+}
+
+// Type out plain text into the bubble character-by-character, then render Markdown at the end
+function typeOut(bubble, text, speed = 15) {
+  if (!bubble) return;
+  // show plain text while typing (avoid HTML partials)
+  bubble.textContent = '';
+  let i = 0;
+  const timer = setInterval(() => {
+    i++;
+    bubble.textContent = text.slice(0, i);
+    chatBox.scrollTop = chatBox.scrollHeight;
+    if (i >= text.length) {
+      clearInterval(timer);
+      // If marked+DOMPurify are available, render as Markdown then sanitize
+      if (typeof marked !== 'undefined' && typeof DOMPurify !== 'undefined') {
+        try {
+          const rendered = marked.parse(String(text));
+          bubble.innerHTML = DOMPurify.sanitize(rendered);
+        } catch (e) {
+          bubble.innerHTML = escapeHtml(String(text));
+        }
+      } else {
+        // fallback to local renderer
+        bubble.innerHTML = renderMarkdown(text);
+      }
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  }, speed);
+}
+
 async function sendMessage() {
   const text = userInput.value.trim();
   if (!text) return;
@@ -45,7 +97,10 @@ async function sendMessage() {
   } else {
     replyText = await response.text();
   }
-  addMessage(replyText, 'bot');
+  // Create a bot bubble with typing indicator and then type out the reply
+  const botBubble = createBotBubble();
+  // speed in ms per character (tune as desired)
+  typeOut(botBubble, replyText, 12);
 }
 
 sendBtn.addEventListener('click', sendMessage);
