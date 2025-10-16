@@ -28,31 +28,31 @@ conda activate aienv
 pip install -r requirements.txt
 ```
 
-## 🔧 Setup Instructions
+
 
 ### 1️⃣ Create a `.env` File
 
 In the root directory, create a `.env` file and add your **Pinecone** and **OpenAI** credentials:
 
 
-2️⃣ Store Embeddings in Pinecone
+### 2️⃣ Store Embeddings in Pinecone
 
 Run the following command to generate and store vector embeddings:
-
+```bash
 python store_index.py
-
-3️⃣ Launch the Flask Application
+```
+### 3️⃣ Launch the Flask Application
 
 Start the application by running:
-
+```bash
 python app.py
-
+```
 
 Then open your browser and go to:
 
 http://localhost:8080
 
-🧠 Tech Stack
+### 🧠 Tech Stack
 
 Python
 
